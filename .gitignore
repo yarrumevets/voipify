@@ -1,0 +1,10 @@
+.DS_Store
+Thumbs.db
+Desktop.ini
+*.code-workspace
+.vscode
+node_modules/
+*.log
+.env
+
+secret.config.js

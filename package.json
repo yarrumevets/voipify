@@ -1,0 +1,15 @@
+{
+  "type": "module",
+  "scripts": {
+    "build": "esbuild src/app.js --bundle --outfile=public/bundle.js --format=iife --global-name=App",
+    "dev": "npm run build && node server.js"
+  },
+  "dependencies": {
+    "@twilio/voice-sdk": "^2.7.0",
+    "express": "^5.1.0",
+    "twilio": "^5.10.5"
+  },
+  "devDependencies": {
+    "esbuild": "^0.24.0"
+  }
+}
