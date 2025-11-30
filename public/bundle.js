@@ -8752,8 +8752,9 @@ var App = (() => {
   // src/app.js
   var device = null;
   document.getElementById("call").addEventListener("click", function() {
+    const phoneNumber = document.getElementById("phone").value;
     if (!device) {
-      fetch("/token").then((res) => res.json()).then((data) => {
+      fetch("/token?phoneNumber=" + encodeURIComponent(phoneNumber)).then((res) => res.json()).then((data) => {
         device = new Device(data.token);
         device.on("ready", () => console.log("device ready"));
         device.on("error", (e) => console.log("device error", e));
@@ -8761,7 +8762,9 @@ var App = (() => {
         device.connect();
       });
     } else {
-      device.connect();
+      fetch("/token?phoneNumber=" + encodeURIComponent(phoneNumber)).then(() => {
+        device.connect();
+      });
     }
   });
 })();

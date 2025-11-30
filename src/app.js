@@ -3,8 +3,10 @@ import { Device } from "@twilio/voice-sdk";
 let device = null;
 
 document.getElementById("call").addEventListener("click", function () {
+  const phoneNumber = document.getElementById("phone").value;
+
   if (!device) {
-    fetch("/token")
+    fetch("/token?phoneNumber=" + encodeURIComponent(phoneNumber))
       .then((res) => res.json())
       .then((data) => {
         device = new Device(data.token);
@@ -14,6 +16,8 @@ document.getElementById("call").addEventListener("click", function () {
         device.connect();
       });
   } else {
-    device.connect();
+    fetch("/token?phoneNumber=" + encodeURIComponent(phoneNumber)).then(() => {
+      device.connect();
+    });
   }
 });

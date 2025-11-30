@@ -3,6 +3,7 @@ import express from "express";
 import twilio from "twilio";
 import path from "path";
 import { fileURLToPath } from "url";
+import { randomUUID } from "crypto";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -16,10 +17,11 @@ const accountSid = secretConfig.creds.live.sid;
 const apiKeySid = secretConfig.creds.live.apiKeySid;
 const apiKeySecret = secretConfig.creds.live.apiKeySecret;
 const twimlAppSid = secretConfig.creds.live.twimlAppSid;
-const NUMBER_TO_DIAL = secretConfig.phoneNumber.my;
 const CALLER_ID = secretConfig.phoneNumber.twilio;
 
 const app = express();
+
+const phoneNumbers = {};
 
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -28,7 +30,9 @@ app.get("/", (req, res) => {
 });
 
 app.get("/token", (req, res) => {
-  const identity = "browser-user";
+  const identity = randomUUID();
+  const identityKey = `client:${identity}`;
+  phoneNumbers[identityKey] = req.query.phoneNumber;
   const token = new AccessToken(accountSid, apiKeySid, apiKeySecret, {
     identity,
   });
@@ -40,10 +44,10 @@ app.get("/token", (req, res) => {
 });
 
 app.get("/voice", (req, res) => {
-  console.log("Twilio is calling you...");
+  const phoneNumber = phoneNumbers[req.query.From];
   const twiml = new twilio.twiml.VoiceResponse();
   const dial = twiml.dial({ callerId: CALLER_ID });
-  dial.number(NUMBER_TO_DIAL);
+  dial.number(phoneNumber);
   res.type("text/xml");
   res.send(twiml.toString());
 });
