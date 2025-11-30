@@ -8751,20 +8751,32 @@ var App = (() => {
 
   // src/app.js
   var device = null;
+  var identity = null;
+  document.getElementById("digits").addEventListener("keypress", function(e) {
+    if (e.key === "Enter") {
+      makeCall();
+    }
+  });
   document.getElementById("call").addEventListener("click", function() {
-    const phoneNumber = document.getElementById("phone").value;
-    if (!device) {
+    makeCall();
+  });
+  function makeCall() {
+    const phoneNumber = "+" + document.getElementById("digits").value;
+    if (!identity) {
       fetch("/token?phoneNumber=" + encodeURIComponent(phoneNumber)).then((res) => res.json()).then((data) => {
         device = new Device(data.token);
+        identity = data.identity;
         device.on("ready", () => console.log("device ready"));
         device.on("error", (e) => console.log("device error", e));
         device.on("connect", () => console.log("device connect"));
         device.connect();
       });
     } else {
-      fetch("/token?phoneNumber=" + encodeURIComponent(phoneNumber)).then(() => {
+      fetch(
+        "/updatePhoneNumber?identity=" + encodeURIComponent(identity) + "&phoneNumber=" + encodeURIComponent(phoneNumber)
+      ).then(() => {
         device.connect();
       });
     }
-  });
+  }
 })();

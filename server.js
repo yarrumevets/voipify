@@ -19,10 +19,9 @@ const apiKeySecret = secretConfig.creds.live.apiKeySecret;
 const twimlAppSid = secretConfig.creds.live.twimlAppSid;
 const CALLER_ID = secretConfig.phoneNumber.twilio;
 
-const app = express();
-
 const phoneNumbers = {};
 
+const app = express();
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", (req, res) => {
@@ -31,8 +30,7 @@ app.get("/", (req, res) => {
 
 app.get("/token", (req, res) => {
   const identity = randomUUID();
-  const identityKey = `client:${identity}`;
-  phoneNumbers[identityKey] = req.query.phoneNumber;
+  phoneNumbers[identity] = req.query.phoneNumber;
   const token = new AccessToken(accountSid, apiKeySid, apiKeySecret, {
     identity,
   });
@@ -40,11 +38,20 @@ app.get("/token", (req, res) => {
     outgoingApplicationSid: twimlAppSid,
   });
   token.addGrant(voiceGrant);
-  res.json({ token: token.toJwt() });
+  res.json({ token: token.toJwt(), identity: identity });
+});
+
+app.get("/updatePhoneNumber", (req, res) => {
+  const phoneNumber = req.query.phoneNumber;
+  const identity = req.query.identity;
+  phoneNumbers[identity] = phoneNumber;
+  res.send("Phone number updated successfully!");
 });
 
 app.get("/voice", (req, res) => {
-  const phoneNumber = phoneNumbers[req.query.From];
+  const identity = req.query.From.replace("client:", "");
+  const phoneNumber = phoneNumbers[identity];
+  console.log("Calling ", phoneNumber, " . . .");
   const twiml = new twilio.twiml.VoiceResponse();
   const dial = twiml.dial({ callerId: CALLER_ID });
   dial.number(phoneNumber);
