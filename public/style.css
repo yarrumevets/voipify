@@ -1,11 +1,11 @@
 @font-face {
   font-family: "Segment7";
-  src: url("/fonts/Segment7Standard.otf") format("opentype");
+  src: url("./fonts/Segment7Standard.otf") format("opentype");
 }
 
 @font-face {
   font-family: "PressStart2P";
-  src: url("/fonts/PressStart2P-Regular.ttf") format("truetype");
+  src: url("./fonts/PressStart2P-Regular.ttf") format("truetype");
 }
 
 body {
@@ -26,7 +26,7 @@ h1#phone-title {
 }
 
 #phone {
-  background-image: url("/images/bigphone.webp");
+  background-image: url("./images/bigphone.webp");
   width: 1200px;
   height: 1024px;
   margin: 0 auto;
