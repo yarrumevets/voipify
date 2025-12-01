@@ -1,0 +1,67 @@
+@font-face {
+  font-family: "Segment7";
+  src: url("/fonts/Segment7Standard.otf") format("opentype");
+}
+
+@font-face {
+  font-family: "PressStart2P";
+  src: url("/fonts/PressStart2P-Regular.ttf") format("truetype");
+}
+
+body {
+  background-color: #cbb79d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+h1#phone-title {
+  font-family: "PressStart2P";
+  position: absolute;
+  top: 309px;
+  left: 344px;
+}
+
+#phone {
+  background-image: url("/images/bigphone.webp");
+  width: 1200px;
+  height: 1024px;
+  margin: 0 auto;
+  position: relative;
+}
+
+#digits {
+  position: absolute;
+  top: 433px;
+  right: 313px;
+  font-family: "Segment7", monospace;
+  font-size: 65px;
+  text-align: right;
+  background-color: #000;
+  color: #f44;
+  padding: 0;
+  margin: 0;
+  width: 450px;
+  border: 0;
+}
+
+#digits:focus {
+  outline: none;
+}
+
+input.digits::placeholder {
+  color: #900; /* darker than #f44 */
+}
+
+button#call {
+  position: absolute;
+  top: 535px;
+  right: 304px;
+  font-size: 29px;
+  padding: 10px 20px;
+  background-color: transparent;
+  border: 0;
+}
